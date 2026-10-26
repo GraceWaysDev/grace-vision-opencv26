@@ -1,0 +1,78 @@
+{
+  "912c32f41e8fcd2f71b68c4812b582dc0034e61c221610a7cad06d18791eb18b": {
+    "name": "suitable",
+    "sha256": "912c32f41e8fcd2f71b68c4812b582dc0034e61c221610a7cad06d18791eb18b",
+    "size": 1513479,
+    "metrics": {
+      "width": 800,
+      "height": 640,
+      "pixels": 512000,
+      "sharpness": 8064.761262271639,
+      "brightness": 129.539958984375,
+      "contrast": 44.757359827723505,
+      "dark_fraction": 0.004126953125,
+      "overexposed_fraction": 0.005345703125
+    },
+    "action": "ACCEPT_ORIGINAL",
+    "source": "assets/suitable.png",
+    "operations": [],
+    "after": null,
+    "proposal": null,
+    "proposal_sha256": null
+  },
+  "12ca9501763cef5411fbce307f92fbce2bd43a20d19a37262f83626600fc1d03": {
+    "name": "correctable",
+    "sha256": "12ca9501763cef5411fbce307f92fbce2bd43a20d19a37262f83626600fc1d03",
+    "size": 1511422,
+    "metrics": {
+      "width": 800,
+      "height": 640,
+      "pixels": 512000,
+      "sharpness": 7610.638390014008,
+      "brightness": 82.132380859375,
+      "contrast": 43.46809364075214,
+      "dark_fraction": 0.0568671875,
+      "overexposed_fraction": 0.0
+    },
+    "action": "ENHANCE",
+    "source": "assets/correctable.png",
+    "operations": [
+      {
+        "gamma": 0.85
+      }
+    ],
+    "after": {
+      "width": 800,
+      "height": 640,
+      "pixels": 512000,
+      "sharpness": 8299.301004722522,
+      "brightness": 94.305759765625,
+      "contrast": 45.39221274362597,
+      "dark_fraction": 0.045298828125,
+      "overexposed_fraction": 0.0
+    },
+    "proposal": "assets/correctable-proposal.png",
+    "proposal_sha256": "b02e944a62e55120ac5e11e059056ca3bbd3c3434f542781dc5d58fd1e52f242"
+  },
+  "c06725571a77b954190721a592c32db8e32f672e63813b633313d0804de6520f": {
+    "name": "unusable",
+    "sha256": "c06725571a77b954190721a592c32db8e32f672e63813b633313d0804de6520f",
+    "size": 3359,
+    "metrics": {
+      "width": 800,
+      "height": 640,
+      "pixels": 512000,
+      "sharpness": 0.0,
+      "brightness": 125.0,
+      "contrast": 0.0,
+      "dark_fraction": 0.0,
+      "overexposed_fraction": 0.0
+    },
+    "action": "TRY_NEXT_IMAGE",
+    "source": "assets/unusable.png",
+    "operations": [],
+    "after": null,
+    "proposal": null,
+    "proposal_sha256": null
+  }
+}

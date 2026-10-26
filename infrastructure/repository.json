@@ -1,0 +1,51 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Grace Vision image repository bootstrap; no application deployment.",
+  "Resources": {
+    "Repository": {
+      "Type": "AWS::ECR::Repository",
+      "DeletionPolicy": "Retain",
+      "UpdateReplacePolicy": "Retain",
+      "Properties": {
+        "ImageTagMutability": "IMMUTABLE",
+        "ImageScanningConfiguration": {
+          "ScanOnPush": true
+        },
+        "EncryptionConfiguration": {
+          "EncryptionType": "AES256"
+        },
+        "LifecyclePolicy": {
+          "LifecyclePolicyText": "{\"rules\":[{\"rulePriority\":1,\"description\":\"Retain the three newest images across all tags\",\"selection\":{\"tagStatus\":\"any\",\"countType\":\"imageCountMoreThan\",\"countNumber\":3},\"action\":{\"type\":\"expire\"}}]}"
+        },
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "GraceVision"
+          },
+          {
+            "Key": "Competition",
+            "Value": "OpenCV-AI-Competition-2026"
+          },
+          {
+            "Key": "Environment",
+            "Value": "competition-demo"
+          },
+          {
+            "Key": "ManagedBy",
+            "Value": "CloudFormation"
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "RepositoryUri": {
+      "Value": {
+        "Fn::GetAtt": [
+          "Repository",
+          "RepositoryUri"
+        ]
+      }
+    }
+  }
+}

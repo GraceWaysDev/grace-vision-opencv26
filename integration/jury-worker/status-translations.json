@@ -1,0 +1,50 @@
+{
+  "statusCodes": [
+    "ALREADY_DECIDED",
+    "ANALYSIS",
+    "AWS_DISABLED",
+    "BRIDGE_REJECTED",
+    "CHOICE",
+    "COUNT",
+    "EXPIRED",
+    "FIXTURE",
+    "FORMAT",
+    "INTEGRITY",
+    "NO_PROPOSAL",
+    "NO_SELECTION",
+    "RIGHTS",
+    "UNEXPECTED",
+    "UPLOAD",
+    "approved",
+    "challenge",
+    "denied",
+    "done",
+    "ready",
+    "selected",
+    "working"
+  ],
+  "messages": {
+    "de": {
+      "challenge": "Bitte Sicherheitsprüfung abschließen.",
+      "ACCEPT_ORIGINAL": "Original geeignet",
+      "ENHANCE": "Behutsame Verbesserung empfohlen",
+      "TRY_NEXT_IMAGE": "Nächstes Foto prüfen",
+      "REQUEST_NEW_PHOTO": "Neues Foto erforderlich",
+      "photos": "1–5 Fotos auswählen – ein Foto genügt (JPEG/PNG, max. 2 MiB je Bild, höchstens 1600 × 1600 Pixel)",
+      "FORMAT": "Nur JPEG/PNG bis 2 MiB und höchstens 1600 × 1600 Pixel."
+    },
+    "en": {
+      "challenge": "Please complete the security check.",
+      "ACCEPT_ORIGINAL": "Original suitable",
+      "ENHANCE": "Gentle enhancement recommended",
+      "TRY_NEXT_IMAGE": "Try the next photo",
+      "REQUEST_NEW_PHOTO": "New photo required",
+      "photos": "Select 1–5 photos – one photo is enough (JPEG/PNG, max. 2 MiB each, at most 1600 × 1600 pixels)",
+      "FORMAT": "Only JPEG/PNG up to 2 MiB and at most 1600 × 1600 pixels."
+    }
+  },
+  "workingLive": {
+    "de": "Private Verarbeitung läuft …",
+    "en": "Private processing in progress …"
+  }
+}

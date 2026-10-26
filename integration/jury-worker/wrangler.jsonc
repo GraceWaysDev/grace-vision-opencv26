@@ -1,0 +1,18 @@
+{
+  "name": "gracevision-opencv26-jury-demo",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-24",
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  "observability": {
+    "enabled": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "title": "A photograph of a cat lying down 0002",
+  "author": "Asabae2752",
+  "license": "CC0-1.0",
+  "source": "https://commons.wikimedia.org/wiki/File:A_photograph_of_a_cat_lying_down_0002.jpg",
+  "source_sha256": "9d4355751377e74e70cf77b1bc13c8f5dcff52b1f2d1049a03b885b01b365279",
+  "source_bytes": 6428124,
+  "packaged_sha256": "4eaed17556ab8963816f50d99c2e11acc3c1abf13ce6803bdbdd335e3f56bb43",
+  "packaged_bytes": 6368528,
+  "pixel_sha256": "d9f02048aa1469c7c93c677b12a8ee8492e649616f3c576c647addba532fc811",
+  "privacy_transform": "EXIF, comments and non-ICC auxiliary JPEG APP segments removed without changing decoded RGB pixels",
+  "scope": "Competition source archive and local model evaluation; not served by the public demo"
+}

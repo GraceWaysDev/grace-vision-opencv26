@@ -1,0 +1,422 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Additive private-key jury gateway for an existing Grace Vision Lambda. No image, storage or function changes.",
+  "Parameters": {
+    "ExistingFunctionName": {
+      "Type": "String",
+      "NoEcho": true,
+      "AllowedPattern": "gracevision[-a-z0-9]*-analysis",
+      "Description": "Existing separately verified competition function only"
+    }
+  },
+  "Rules": {
+    "FrankfurtOnly": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Equals": [
+              {
+                "Ref": "AWS::Region"
+              },
+              "eu-central-1"
+            ]
+          },
+          "AssertDescription": "Only Frankfurt is authorized"
+        }
+      ]
+    }
+  },
+  "Resources": {
+    "Gateway": {
+      "Type": "AWS::ApiGateway::RestApi",
+      "Properties": {
+        "Name": "GraceVision-Jury-Gateway",
+        "ApiKeySourceType": "HEADER",
+        "EndpointConfiguration": {
+          "Types": [
+            "REGIONAL"
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "GraceVision"
+          },
+          {
+            "Key": "Competition",
+            "Value": "OpenCV-AI-Competition-2026"
+          },
+          {
+            "Key": "Environment",
+            "Value": "competition-demo"
+          },
+          {
+            "Key": "ManagedBy",
+            "Value": "CloudFormation"
+          }
+        ]
+      }
+    },
+    "InvokeResource": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "Gateway"
+        },
+        "ParentId": {
+          "Fn::GetAtt": [
+            "Gateway",
+            "RootResourceId"
+          ]
+        },
+        "PathPart": "invoke"
+      }
+    },
+    "EventModel": {
+      "Type": "AWS::ApiGateway::Model",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "Gateway"
+        },
+        "ContentType": "application/json",
+        "Schema": {
+          "$schema": "http://json-schema.org/draft-04/schema#",
+          "title": "DirectGraceVisionEvent",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation",
+                "uploads",
+                "rights_confirmed"
+              ],
+              "properties": {
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "create"
+                  ]
+                },
+                "uploads": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 5,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "content_type",
+                      "size",
+                      "sha256"
+                    ],
+                    "properties": {
+                      "content_type": {
+                        "type": "string",
+                        "enum": [
+                          "image/png",
+                          "image/jpeg"
+                        ]
+                      },
+                      "size": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 2097152
+                      },
+                      "sha256": {
+                        "type": "string",
+                        "pattern": "^[a-f0-9]{64}$"
+                      }
+                    }
+                  }
+                },
+                "rights_confirmed": {
+                  "type": "boolean",
+                  "enum": [
+                    true
+                  ]
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation",
+                "job_id"
+              ],
+              "properties": {
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "analyze"
+                  ]
+                },
+                "job_id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{32}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation",
+                "job_id"
+              ],
+              "properties": {
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "result"
+                  ]
+                },
+                "job_id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{32}$"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "operation",
+                "job_id",
+                "decision"
+              ],
+              "properties": {
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "decide"
+                  ]
+                },
+                "job_id": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{32}$"
+                },
+                "decision": {
+                  "type": "string",
+                  "enum": [
+                    "APPROVE",
+                    "REQUEST_NEW_PHOTO"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "EventValidator": {
+      "Type": "AWS::ApiGateway::RequestValidator",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "Gateway"
+        },
+        "ValidateRequestBody": true,
+        "ValidateRequestParameters": true
+      }
+    },
+    "InvokeMethod": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "Gateway"
+        },
+        "ResourceId": {
+          "Ref": "InvokeResource"
+        },
+        "HttpMethod": "POST",
+        "AuthorizationType": "NONE",
+        "ApiKeyRequired": true,
+        "RequestValidatorId": {
+          "Ref": "EventValidator"
+        },
+        "RequestModels": {
+          "application/json": {
+            "Ref": "EventModel"
+          }
+        },
+        "Integration": {
+          "Type": "AWS",
+          "IntegrationHttpMethod": "POST",
+          "Uri": {
+            "Fn::Sub": "arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:${ExistingFunctionName}/invocations"
+          },
+          "PassthroughBehavior": "NEVER",
+          "TimeoutInMillis": 29000,
+          "RequestTemplates": {
+            "application/json": "$input.json('$')"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseTemplates": {
+                "application/json": "$input.body"
+              }
+            }
+          ]
+        },
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseModels": {
+              "application/json": "Empty"
+            }
+          }
+        ]
+      }
+    },
+    "DeploymentSinglePhoto": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "DependsOn": [
+        "InvokeMethod",
+        "InvokePermission"
+      ],
+      "Properties": {
+        "RestApiId": {
+          "Ref": "Gateway"
+        }
+      }
+    },
+    "Stage": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "RestApiId": {
+          "Ref": "Gateway"
+        },
+        "DeploymentId": {
+          "Ref": "DeploymentSinglePhoto"
+        },
+        "StageName": "jury",
+        "TracingEnabled": false,
+        "MethodSettings": [
+          {
+            "ResourcePath": "/*",
+            "HttpMethod": "*",
+            "DataTraceEnabled": false,
+            "LoggingLevel": "OFF",
+            "MetricsEnabled": false,
+            "ThrottlingRateLimit": 2,
+            "ThrottlingBurstLimit": 2
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "GraceVision"
+          },
+          {
+            "Key": "Competition",
+            "Value": "OpenCV-AI-Competition-2026"
+          },
+          {
+            "Key": "Environment",
+            "Value": "competition-demo"
+          },
+          {
+            "Key": "ManagedBy",
+            "Value": "CloudFormation"
+          }
+        ]
+      }
+    },
+    "GatewayKey": {
+      "Type": "AWS::ApiGateway::ApiKey",
+      "Properties": {
+        "Enabled": true,
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "GraceVision"
+          },
+          {
+            "Key": "Competition",
+            "Value": "OpenCV-AI-Competition-2026"
+          },
+          {
+            "Key": "Environment",
+            "Value": "competition-demo"
+          },
+          {
+            "Key": "ManagedBy",
+            "Value": "CloudFormation"
+          }
+        ]
+      }
+    },
+    "UsagePlan": {
+      "Type": "AWS::ApiGateway::UsagePlan",
+      "Properties": {
+        "UsagePlanName": "GraceVision-Jury-Daily",
+        "ApiStages": [
+          {
+            "ApiId": {
+              "Ref": "Gateway"
+            },
+            "Stage": {
+              "Ref": "Stage"
+            }
+          }
+        ],
+        "Throttle": {
+          "RateLimit": 2,
+          "BurstLimit": 2
+        },
+        "Quota": {
+          "Limit": 40,
+          "Period": "DAY"
+        },
+        "Tags": [
+          {
+            "Key": "Project",
+            "Value": "GraceVision"
+          },
+          {
+            "Key": "Competition",
+            "Value": "OpenCV-AI-Competition-2026"
+          },
+          {
+            "Key": "Environment",
+            "Value": "competition-demo"
+          },
+          {
+            "Key": "ManagedBy",
+            "Value": "CloudFormation"
+          }
+        ]
+      }
+    },
+    "UsagePlanKey": {
+      "Type": "AWS::ApiGateway::UsagePlanKey",
+      "Properties": {
+        "KeyId": {
+          "Ref": "GatewayKey"
+        },
+        "KeyType": "API_KEY",
+        "UsagePlanId": {
+          "Ref": "UsagePlan"
+        }
+      }
+    },
+    "InvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "FunctionName": {
+          "Ref": "ExistingFunctionName"
+        },
+        "SourceAccount": {
+          "Ref": "AWS::AccountId"
+        },
+        "SourceArn": {
+          "Fn::Sub": "arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${Gateway}/jury/POST/invoke"
+        }
+      }
+    }
+  }
+}

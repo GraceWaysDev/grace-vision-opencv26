@@ -1,0 +1,112 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Account-wide monthly cost monitoring only. No automated budget actions.",
+  "Parameters": {
+    "BudgetAlertEmail": {
+      "Type": "String",
+      "NoEcho": true,
+      "MinLength": 1,
+      "Description": "Private recipient supplied only at deployment; never store in project files or reports."
+    }
+  },
+  "Resources": {
+    "MonthlyCostBudget": {
+      "Type": "AWS::Budgets::Budget",
+      "Properties": {
+        "Budget": {
+          "BudgetName": "GraceVision-OpenCV26-Monthly",
+          "BudgetType": "COST",
+          "TimeUnit": "MONTHLY",
+          "BudgetLimit": {
+            "Amount": 5,
+            "Unit": "USD"
+          }
+        },
+        "NotificationsWithSubscribers": [
+          {
+            "Notification": {
+              "NotificationType": "ACTUAL",
+              "ComparisonOperator": "GREATER_THAN",
+              "Threshold": 50,
+              "ThresholdType": "PERCENTAGE"
+            },
+            "Subscribers": [
+              {
+                "SubscriptionType": "EMAIL",
+                "Address": {
+                  "Ref": "BudgetAlertEmail"
+                }
+              }
+            ]
+          },
+          {
+            "Notification": {
+              "NotificationType": "ACTUAL",
+              "ComparisonOperator": "GREATER_THAN",
+              "Threshold": 80,
+              "ThresholdType": "PERCENTAGE"
+            },
+            "Subscribers": [
+              {
+                "SubscriptionType": "EMAIL",
+                "Address": {
+                  "Ref": "BudgetAlertEmail"
+                }
+              }
+            ]
+          },
+          {
+            "Notification": {
+              "NotificationType": "ACTUAL",
+              "ComparisonOperator": "GREATER_THAN",
+              "Threshold": 100,
+              "ThresholdType": "PERCENTAGE"
+            },
+            "Subscribers": [
+              {
+                "SubscriptionType": "EMAIL",
+                "Address": {
+                  "Ref": "BudgetAlertEmail"
+                }
+              }
+            ]
+          },
+          {
+            "Notification": {
+              "NotificationType": "FORECASTED",
+              "ComparisonOperator": "GREATER_THAN",
+              "Threshold": 100,
+              "ThresholdType": "PERCENTAGE"
+            },
+            "Subscribers": [
+              {
+                "SubscriptionType": "EMAIL",
+                "Address": {
+                  "Ref": "BudgetAlertEmail"
+                }
+              }
+            ]
+          }
+        ],
+        "ResourceTags": [
+          {
+            "Key": "Project",
+            "Value": "GraceVision"
+          },
+          {
+            "Key": "Competition",
+            "Value": "OpenCV-AI-Competition-2026"
+          },
+          {
+            "Key": "Environment",
+            "Value": "competition-demo"
+          },
+          {
+            "Key": "ManagedBy",
+            "Value": "CloudFormation"
+          }
+        ]
+      }
+    }
+  }
+}

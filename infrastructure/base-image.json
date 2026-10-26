@@ -1,0 +1,21 @@
+{
+  "source": "public.ecr.aws/lambda/python",
+  "resolved_tag": "3.12",
+  "resolved_date": "2026-10-23",
+  "platform": "linux/amd64",
+  "manifest_list_digest": "sha256:25aee9bac65f131c5d090d3e3a36ccf232d65cf3e6c1dbd0bffd43ca7ce34406",
+  "pinned_platform_digest": "sha256:c73d459e2dcaefa83c47c095560ad164d732251312b3371c7a49c46f1c4d4ff5",
+  "runtime_execution_verified": true,
+  "runtime_verified_versions": {
+    "python": "3.12.15",
+    "boto3": "1.42.97",
+    "botocore": "1.42.97",
+    "opencv": "5.0.0"
+  },
+  "sdk": "Base-image boto3/botocore are pinned transitively by the immutable platform digest and were observed in the tested container.",
+  "security_patch_releases": [
+    "2023.12.20260928",
+    "2023.12.20261012"
+  ],
+  "security_note": "Container execution was verified. Six ALAS RPM fixes and the installed OpenSSL variants are pinned in the Dockerfile. The later released-image scan still reported 0 Critical and 7 High findings in Amazon Linux packages marked Pending Fix by the manufacturer; these remain covered only by the documented time-limited competition risk exception."
+}

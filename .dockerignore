@@ -1,0 +1,17 @@
+**
+!app/
+!app/**
+!tests/
+!tests/**
+!infrastructure/
+!infrastructure/**
+!vendor/
+!vendor/linux/
+!vendor/linux/*.whl
+!vendor/models/
+!vendor/models/yolox-s/
+!vendor/models/yolox-s/model.onnx
+!vendor/models/yolox-s/LICENSE
+!vendor/models/yolox-s/provenance.json
+**/__pycache__/
+**/*.pyc
