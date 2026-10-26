@@ -99,7 +99,7 @@ See [Build, test and deploy](docs/BUILD_TEST_DEPLOY.md) for the complete reprodu
 - AWS control traces demonstrated accept, enhance and safe-reject branches with OpenCV 5.0.0.
 - Phase 4H recorded 358 tests and 437 browser assertions for the cat-framing release.
 - This cleaned archive was reverified with 56 Python/OpenCV tests and 56 portable Worker/contract tests.
-- A small CC0 real-cat fixture is included only for model/geometry testing; it is not an accuracy benchmark.
+- The full offline archive contains a small CC0 real-cat fixture only for model/geometry testing; it is not an accuracy benchmark. The compact public repository retains its provenance record but omits the image bytes.
 - The real-cat Molly boundary case produced a false rejection under the strict edge-contact rule. No Molly image is included in this archive.
 - YOLOX provides a bounding box, not segmentation, identity, medical assessment or proof that all body parts are visible.
 - Human visibility review is mandatory before approval.
@@ -113,7 +113,7 @@ This archive contains the source state corresponding to the deployed jury workfl
 
 ## Rights and licensing
 
-The included CC0 cat fixture and third-party model/dependencies have provenance and license files in this archive. No Molly image, user photo, production database export, credential, token, account identifier or private GraceWays Animals source is included.
+Provenance and license records for the omitted CC0 cat fixture and third-party model/dependencies are included. No Molly image, user photo, production database export, credential, token, account identifier or private GraceWays Animals source is included.
 
 The project source is supplied for competition review; no general open-source license is granted. See [LICENSE-NOTICE.md](LICENSE-NOTICE.md) and [Third-party components](docs/THIRD_PARTY.md).
 
